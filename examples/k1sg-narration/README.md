@@ -45,6 +45,19 @@ Then visit `http://localhost:3900` on that computer, install a model supported b
 
 For an existing local desktop installation, skip Docker and use the application's own configured backend.
 
+## Import your private 100-script production kit
+
+Keep `K1SG_VoiceStudio_Repo_Kit.zip` on your computer. It contains the prepared narration text and is **not** committed to GitHub.
+
+To stage the first 10 scripts without manually copying files:
+
+```bash
+python3 examples/k1sg-narration/import_private_kit.py \
+  --kit /path/to/K1SG_VoiceStudio_Repo_Kit.zip
+```
+
+That stages M-001 through M-010 into the Git-ignored `private_scripts/` folder. To stage just M-001, add `--first 1 --last 1`; after audition approval, stage all 100 with `--all`. The importer refuses to overwrite existing files unless you explicitly pass `--overwrite`, validates the requested script range and UTF-8 text, and never uploads the contents.
+
 ## Check readiness before spending time on a render
 
 After selecting a model and saved voice, copy `M-001.txt` to the ignored `private_scripts/` directory, then run:
