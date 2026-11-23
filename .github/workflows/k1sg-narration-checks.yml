@@ -1,0 +1,49 @@
+name: K1SG VoiceStudio CLI smoke tests
+
+on:
+  pull_request:
+    paths:
+      - "examples/k1sg-narration/**"
+      - ".github/workflows/k1sg-narration-checks.yml"
+  push:
+    branches:
+      - main
+      - feature/k1sg-narration-cli
+    paths:
+      - "examples/k1sg-narration/**"
+      - ".github/workflows/k1sg-narration-checks.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  cli-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run isolated CLI smoke tests (no model download or audio synthesis)
+        run: python -m unittest discover -s examples/k1sg-narration/tests -v
+      - name: Verify command-line help
+        run: python examples/k1sg-narration/render.py --help
+
+  windows-pilot-script:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse PowerShell launcher on Windows (no TTS or private scripts)
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          $path = (Resolve-Path "examples/k1sg-narration/run_pilot_windows.ps1").Path
+          [System.Management.Automation.Language.Parser]::ParseFile($path, [ref] $tokens, [ref] $errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Host "Windows pilot PowerShell syntax valid"

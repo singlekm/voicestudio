@@ -1,0 +1,6 @@
+# Do not publish original K1SG scripts or voice recordings
+private_scripts/
+private_output/
+*.wav
+*.mp3
+*.m4b
