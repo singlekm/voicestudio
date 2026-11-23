@@ -8,7 +8,42 @@ This example uses the open-source VoiceStudio CLI from this fork. It does **not*
 2. Run `voicestudio status` and `voicestudio models list`; install a compatible TTS model through the app.
 3. **Review the engine, model-weight and voice-asset licenses individually** before commercial narration. App source licensing does not automatically grant commercial rights to every model.
 4. Run `voicestudio voices list`. Create/select a local voice profile, preferably a calm, articulate documentary-style male narrator. The default script profile name `K1SG Documentary` must actually exist.
-5. Install `ffmpeg` for MP3 output (or choose WAV). Python 3.9+ is sufficient for this runner.
+5. Install `ffmpeg` for MP3 output (or choose WAV). Python 3.11+ is required for the VoiceStudio CLI (see `cli/pyproject.toml`).
+
+## Quick start from your fork (Linux/macOS + Docker)
+
+Run these commands on **your own computer**, not in the GitHub mobile app. They start the official upstream VoiceStudio CPU container and use the CLI from this fork. They do not download or accept any model licence automatically.
+
+```bash
+git clone https://github.com/singlekm/voicestudio.git
+cd voicestudio
+git switch feature/k1sg-narration-cli
+
+# Python 3.11+ and Docker must already be installed
+python3 -m venv .k1sg-venv
+. .k1sg-venv/bin/activate
+python -m pip install -e ./cli
+
+export OMNIVOICE_API_KEY="$(openssl rand -hex 32)"
+docker run -d --name k1sg-voicestudio \
+  -p 127.0.0.1:3900:3900 \
+  -e OMNIVOICE_API_KEY \
+  -e OMNIVOICE_DATA_DIR=/app/omnivoice_data \
+  -v k1sg-voicestudio-data:/app/omnivoice_data \
+  ghcr.io/debpalash/voicestudio:stable
+
+voicestudio connection set http://127.0.0.1:3900
+printf '%s' "$OMNIVOICE_API_KEY" | voicestudio connection auth set --stdin
+voicestudio connection test
+voicestudio models list
+voicestudio voices list
+```
+
+Do **not** commit the generated API key, downloaded model files, user-authored scripts, or rendered audio. The API binds to localhost only. The Docker image can take substantial disk space and CPU time.
+
+Then visit `http://localhost:3900` on that computer, install a model supported by the CPU backend, review and accept its licensing terms yourself, and set up the `K1SG Documentary` voice profile. Verify model and voice readiness with `voicestudio models list` and `voicestudio voices list`, then run the M-001 command below. Refer to the upstream [Docker guide](https://github.com/debpalash/VoiceStudio/blob/main/docs/install/docker.md) for OS-specific setup and GPU acceleration.
+
+For an existing local desktop installation, skip Docker and use the application's own configured backend.
 
 ## Test M-001
 
