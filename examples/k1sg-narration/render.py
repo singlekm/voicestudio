@@ -29,8 +29,8 @@ def render(src, dest, args):
     command = ["voicestudio", "speak", "--text-file", str(src),
                "--voice", args.voice, "--language", "en",
                "--speed", str(args.speed), "--instruct",
-               "Read as a warm, resonant science documentary narrator. "
-               "Precise scientific diction, unhurried delivery, natural pauses, "
+               "Read as a warm, resonant science documentary narrator. " +
+               "Precise scientific diction, unhurried delivery, natural pauses, " +
                "restrained wonder, never a sales announcer.",
                "--output", str(wav)]
     if args.engine:
