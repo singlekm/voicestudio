@@ -45,6 +45,16 @@ Then visit `http://localhost:3900` on that computer, install a model supported b
 
 For an existing local desktop installation, skip Docker and use the application's own configured backend.
 
+## Check readiness before spending time on a render
+
+After selecting a model and saved voice, copy `M-001.txt` to the ignored `private_scripts/` directory, then run:
+
+```bash
+python3 examples/k1sg-narration/preflight.py --milestone M-001 --voice "K1SG Documentary"
+```
+
+The preflight checks the VoiceStudio CLI, authenticated backend connection, existence of at least one installed model, the exact saved voice profile, the local private text file, and FFmpeg for MP3. It does not synthesize audio, accept licences, show secrets, or expose narration scripts. A successful preflight is **not** evidence that the installed model supports your chosen voice or commercial use: run the audition and review licensing separately.
+
 ## Test M-001
 
 Copy the prepared TTS-clean `M-001.txt` from your private K1SG production kit to `examples/k1sg-narration/private_scripts/M-001.txt`. This private folder is Git-ignored. Some original source scripts use delivery tags like `[pause]`; if your engine doesn't support them, use the cleaned copy to avoid reading tags aloud.
