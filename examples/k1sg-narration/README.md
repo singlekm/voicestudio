@@ -35,3 +35,13 @@ Once M-001 is approved, copy the other cleaned `M-###.txt` scripts to the same i
 ## Scope
 
 This is an integration example, **not a completed neural audio sample or an installed backend**. The real VoiceStudio model and voice profile must run on a compatible machine. No GitHub Action attempts synthesis: remote CI does not automatically have the model weights, license approvals, voice profile, or the private K1SG content. Never commit the private script folder to this public fork.
+
+## Repeatable checks in GitHub Actions
+
+The `K1SG VoiceStudio CLI smoke tests` workflow runs automatically for changes to this directory. It validates the exact CLI argument construction, milestone numbering, nonempty WAV output checks, optional MP3 conversion, and overwrite protections using isolated test doubles. **It does not synthesize audio** or retrieve the private scripts.
+
+Locally, run:
+
+    python3 -m unittest discover -s examples/k1sg-narration/tests -v
+
+Once VoiceStudio is installed and has a commercially permitted, compatible TTS model and saved voice profile, run the M-001 command above on that computer. An actual audio audition is required before this PR should be regarded as production-ready.
