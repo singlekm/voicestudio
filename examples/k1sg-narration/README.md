@@ -58,6 +58,22 @@ python3 examples/k1sg-narration/import_private_kit.py \
 
 That stages M-001 through M-010 into the Git-ignored `private_scripts/` folder. To stage just M-001, add `--first 1 --last 1`; after audition approval, stage all 100 with `--all`. The importer refuses to overwrite existing files unless you explicitly pass `--overwrite`, validates the requested script range and UTF-8 text, and never uploads the contents.
 
+## Windows one-command M-001 pilot
+
+On **Windows PowerShell**, install/start VoiceStudio on your PC first. The official desktop release or the Docker quickstart above provides the backend; the runner uses its local CLI. Install Python 3.11+ and FFmpeg for MP3 output. With the fork checked out to this feature branch:
+
+```powershell
+python -m pip install -e ./cli
+python examples/k1sg-narration/preflight.py --milestone M-001
+
+# When your local model, backend and saved narrator profile are ready:
+./examples/k1sg-narration/run_pilot_windows.ps1 -Kit "C:\Users\YOU\Downloads\K1SG_VoiceStudio_Repo_Kit.zip"
+```
+
+The PowerShell command stages **only M-001**, validates the private local input and your saved voice profile, and calls the real VoiceStudio CLI to produce `private_output/M-001_VoiceStudio.mp3`. It never publishes scripts or output. The `-Voice`, `-Milestone`, `-Format`, `-Engine`, `-Python` and `-Overwrite` options are optional. If using `-Overwrite`, expect it to overwrite both the staged private input and rendered output. Do not change your computer's global PowerShell execution policy; use an appropriate per-process policy only if your organization allows script execution.
+
+This script **does not install or select a model, accept licence terms, or create a voice profile for you**. Those are required before it can generate audio.
+
 ## Check readiness before spending time on a render
 
 After selecting a model and saved voice, copy `M-001.txt` to the ignored `private_scripts/` directory, then run:
