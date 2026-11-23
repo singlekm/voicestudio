@@ -9,7 +9,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parent
-NAME = re.compile(r"M-(?:0[0-9]{2}|100)\.txt\Z", re.IGNORECASE)
+NAME = re.compile(r"M-(?:0(?:0[1-9]|[1-9][0-9])|100)\.txt\Z", re.IGNORECASE)
 
 def run(cmd):
     outcome = subprocess.run(cmd, check=False)
